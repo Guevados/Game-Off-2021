@@ -1,6 +1,6 @@
 import pygame, sys
 from settings import *
-from level import Level
+from components.level import Level
 
 pygame.init()
 
