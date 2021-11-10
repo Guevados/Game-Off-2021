@@ -6,9 +6,9 @@ from components.player import Player
 class Level:
   def __init__(self,level_data,surface):
     self.display_surface = surface
-    self.setup_level(level_data)
     self.world_shift_x = self.direction_x = 0
     self.world_shift_y = self.direction_y = 0
+    self.setup_level(level_data)
 
   def setup_level(self,layout):
     self.tiles = pygame.sprite.Group()
@@ -31,7 +31,7 @@ class Level:
     player_y = player.rect.centery
     direction_y = player.direction.y
 
-# Hacia izquierda
+    # Hacia izquierda
     if player_x < screen_width/4 and direction_x < 0:
       self.world_shift_x = 8
       player.speed = 0
