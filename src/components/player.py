@@ -6,7 +6,7 @@ class Player(pygame.sprite.Sprite):
   def __init__(self,pos):
     super().__init__()
 
-    filename = os.path.join('assets', 'player-sheet.png')
+    filename = os.path.join('src','assets','player-sheet.png')
     sprites = SpriteSheet(filename)
     ALPHA = (255, 255, 255)
     img_front_1 = sprites.image_at((10, 5, 27, 44), ALPHA)
@@ -35,7 +35,7 @@ class Player(pygame.sprite.Sprite):
 
     self.index = 0
     self.image = self.images['front'][self.index]
-    self.rect = self.image.get_rect()
+    self.rect = self.image.get_rect(topleft=pos)
 
     #Player move
     self.direction = pygame.math.Vector2(0,0)
@@ -78,5 +78,4 @@ class Player(pygame.sprite.Sprite):
 
   def update(self):
     self.get_input()
-    self.rect.move_ip(self.direction)
     self.animate()

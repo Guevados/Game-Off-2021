@@ -18,4 +18,4 @@ while True:
   level.run()
 
   pygame.display.update()
-  clock.tick(10)
+  clock.tick(30)
