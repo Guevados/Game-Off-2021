@@ -7,8 +7,13 @@ from components.support_level import import_csv_layout, import_cut_graphics
 class Level:
   def __init__(self, level_data, surface):
     self.display_surface = surface
-    self.world_shift_x = self.direction_x = 0
-    self.world_shift_y = self.direction_y = 0
+    self.world_shift_x = 0
+    self.world_shift_y = 0
+
+    #player
+    player_layout = import_csv_layout(level_data['player'])
+    self.player = pygame.sprite.GroupSingle()
+    self.setup_player(player_layout)
 
     #terrain
     terrain_layout = import_csv_layout(level_data['terrain'])
@@ -116,22 +121,9 @@ class Level:
       for col_index,val in enumerate(row):
         x = col_index * tile_size
         y = row_index * tile_size
-        if cell == '0':
+        if val == '0':
           sprite = Player((x,y),self.display_surface)
           self.player.add(sprite)
-
-  def render_map(self,screen):
-    pass
-    '''y_pos = 0
-      for line in setup_level:
-        x_pos = 0
-        for tile in line:
-          image = map_tile_image[tile]
-          rect = pygame.Rect(x_pos * tile_size, y_pos * tile_size, tile_size, tile_size)
-          screen.blit(image, rect)
-          x_pos = x_pos + 1
-          y_pos = y_pos + 1 '''
-
 
   def scroll_world(self):
     player = self.player.sprite
@@ -158,7 +150,7 @@ class Level:
       self.world_shift_y = 0
       player.speed = 8
 
-  """def horizontal_movement_collision(self):
+  def horizontal_movement_collision(self):
     player = self.player.sprite
     player.rect.x += player.direction.x * player.speed
 
@@ -169,7 +161,7 @@ class Level:
         elif player.direction.x < 0:
           player.rect.left = sprite.rect.right
 
-""" """  def vertical_movement_collision(self):
+  def vertical_movement_collision(self):
     player = self.player.sprite
     player.rect.y += player.direction.y * player.speed
 
@@ -179,7 +171,7 @@ class Level:
           player.rect.bottom = sprite.rect.top
         elif player.direction.y < 0:
           player.rect.top = sprite.rect.bottom
-"""
+
 
   def run(self):
     #terrain
@@ -227,10 +219,10 @@ class Level:
     self.details_bridge_sprites.update(self.world_shift_x,self.world_shift_y)
 
     #player
-    self.player.update(self.world_shift_x,self.world_shift_y)
+    self.player.update()
     self.player.draw(self.display_surface)
 
     self.scroll_world()
 
-    # self.horizontal_movement_collision()
-    # self.vertical_movement_collision()
+    self.horizontal_movement_collision()
+    self.vertical_movement_collision()
