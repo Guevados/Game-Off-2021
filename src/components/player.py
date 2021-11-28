@@ -2,7 +2,7 @@ import os
 import pygame
 from libs.sprite_sheets import SpriteSheet
 class Player(pygame.sprite.Sprite):
-  def __init__(self,pos):
+  def __init__(self, pos):
     super().__init__()
 
     filename = os.path.join('src','assets','player-sheet.png')
