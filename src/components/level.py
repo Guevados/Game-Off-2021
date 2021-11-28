@@ -122,7 +122,7 @@ class Level:
         x = col_index * tile_size
         y = row_index * tile_size
         if val == '0':
-          sprite = Player((x,y),self.display_surface)
+          sprite = Player((x,y))
           self.player.add(sprite)
 
   def scroll_world(self):
@@ -154,23 +154,23 @@ class Level:
     player = self.player.sprite
     player.rect.x += player.direction.x * player.speed
 
-    for sprite in self.tiles.sprites():
-      if player.rect.colliderect(sprite.rect):
-        if player.direction.x > 0:
-          player.rect.right = sprite.rect.left
-        elif player.direction.x < 0:
-          player.rect.left = sprite.rect.right
+    # for sprite in self.tiles.sprites():
+    #   if player.rect.colliderect(sprite.rect):
+    #     if player.direction.x > 0:
+    #       player.rect.right = sprite.rect.left
+    #     elif player.direction.x < 0:
+    #       player.rect.left = sprite.rect.right
 
   def vertical_movement_collision(self):
     player = self.player.sprite
     player.rect.y += player.direction.y * player.speed
 
-    for sprite in self.tiles.sprites():
-      if player.rect.colliderect(sprite.rect):
-        if player.direction.y > 0:
-          player.rect.bottom = sprite.rect.top
-        elif player.direction.y < 0:
-          player.rect.top = sprite.rect.bottom
+    # for sprite in self.tiles.sprites():
+    #   if player.rect.colliderect(sprite.rect):
+    #     if player.direction.y > 0:
+    #       player.rect.bottom = sprite.rect.top
+    #     elif player.direction.y < 0:
+    #       player.rect.top = sprite.rect.bottom
 
 
   def run(self):
