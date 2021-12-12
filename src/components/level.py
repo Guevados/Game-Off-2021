@@ -1,6 +1,6 @@
 import pygame
 from settings import tile_size, screen_width, screen_height
-from components.tiles import Tile, StaticTile
+from components.tiles import Tile, StaticTile, Load_image
 from components.player import Player
 from components.support_level import import_csv_layout, import_cut_graphics
 
@@ -91,26 +91,27 @@ class Level:
             sprite = StaticTile(tile_size,x,y,tile_surface)
 
           if type == 'vegetation1':
-            if val == '4': sprite = StaticTile(tile_size,x,y,pygame.image.load('src/assets/tiles/tree/tree1.png'))
+            if val == '4': sprite = Load_image(tile_size,x,y,pygame.image.load('src/assets/tiles/tree/tree1.png').convert_alpha())
 
           if type == 'vegetation2':
-            if val == '5': sprite = StaticTile(tile_size,x,y,pygame.image.load('src/assets/tiles/tree/tree2.png'))
+            if val == '5': sprite = Load_image(tile_size,x,y, pygame.image.load('src/assets/tiles/tree/tree2.png').convert_alpha())
 
           if type == 'vegetation3':
-            if val == '6': sprite = StaticTile(tile_size,x,y,pygame.image.load('src/assets/tiles/tree/tree3.png'))
+            if val == '6': sprite = Load_image(tile_size,x,y,pygame.image.load('src/assets/tiles/tree/tree3.png').convert_alpha())
 
           if type == 'vegetation4':
-            if val == '7': sprite = StaticTile(tile_size,x,y,pygame.image.load('src/assets/tiles/tree/tree4.png'))
+            if val == '7': sprite = Load_image(tile_size,x,y,pygame.image.load('src/assets/tiles/tree/tree4.png').convert_alpha())
 
           if type == 'buildings':
-            if val == '4046': sprite = StaticTile(tile_size,x,y,pygame.image.load('src/assets/tiles/buildings/buildings1.png'))
-            if val == '4047': sprite = StaticTile(tile_size,x,y,pygame.image.load('src/assets/tiles/buildings/buildings2.png'))
+            if val == '4046': sprite = Load_image(tile_size,x,y,pygame.image.load('src/assets/tiles/buildings/buildings1.png').convert_alpha())
+            if val == '4047': sprite = Load_image(tile_size,x,y,pygame.image.load('src/assets/tiles/buildings/buildings2.png').convert_alpha())
 
           if type == 'bridge':
-            if val == '2': sprite = StaticTile(tile_size,x,y,pygame.image.load('src/assets/tiles/bridge/bridge.png'))
+            if val == '2': sprite = Load_image(tile_size,x,y,pygame.image.load('src/assets/tiles/bridge/bridge.png').convert_alpha())
 
           if type == 'details_bridge':
-            if val == '3': sprite = StaticTile(tile_size,x,y,pygame.image.load('src/assets/tiles/bridge/details_bridge.png'))
+            if val == '3': sprite = Load_image(tile_size,x,y,pygame.image.load('src/assets/tiles/bridge/details_bridge.png').convert_alpha())
+
 
           sprite_group.add(sprite)
 
@@ -153,24 +154,26 @@ class Level:
   def horizontal_movement_collision(self):
     player = self.player.sprite
     player.rect.x += player.direction.x * player.speed
+    collidable_sprites = self.limit_terrain_sprites.sprites() + self.river_sprites.sprites() + self.vegetation1_sprites.sprites() + self.vegetation2_sprites.sprites() + self.vegetation3_sprites.sprites() + self.vegetation4_sprites.sprites() + self.buildings_sprites.sprites()
 
-    # for sprite in self.tiles.sprites():
-    #   if player.rect.colliderect(sprite.rect):
-    #     if player.direction.x > 0:
-    #       player.rect.right = sprite.rect.left
-    #     elif player.direction.x < 0:
-    #       player.rect.left = sprite.rect.right
+    for sprite in collidable_sprites:
+      if player.rect.colliderect(player.rect):
+        if player.direction.x > 0:
+          player.rect.right = sprite.rect.left
+        elif player.direction.x < 0:
+          player.rect.left = sprite.rect.right
 
   def vertical_movement_collision(self):
     player = self.player.sprite
     player.rect.y += player.direction.y * player.speed
+    collidable_sprites = self.limit_terrain_sprites.sprites() + self.river_sprites.sprites() + self.vegetation1_sprites.sprites() + self.vegetation2_sprites.sprites() + self.vegetation3_sprites.sprites() + self.vegetation4_sprites.sprites() + self.buildings_sprites.sprites()
 
-    # for sprite in self.tiles.sprites():
-    #   if player.rect.colliderect(sprite.rect):
-    #     if player.direction.y > 0:
-    #       player.rect.bottom = sprite.rect.top
-    #     elif player.direction.y < 0:
-    #       player.rect.top = sprite.rect.bottom
+    for sprite in collidable_sprites:
+      if player.rect.colliderect(player.rect):
+        if player.direction.y > 0:
+          player.rect.bottom = sprite.rect.top
+        elif player.direction.y < 0:
+          player.rect.top = sprite.rect.bottom
 
 
   def run(self):
@@ -190,6 +193,18 @@ class Level:
     self.road_sprites.draw(self.display_surface)
     self.road_sprites.update(self.world_shift_x,self.world_shift_y)
 
+
+    #buildings
+    self.buildings_sprites.draw(self.display_surface)
+    self.buildings_sprites.update(self.world_shift_x,self.world_shift_y)
+
+    #bridge
+    self.bridge_sprites.draw(self.display_surface)
+    self.bridge_sprites.update(self.world_shift_x,self.world_shift_y)
+    #detail_bridge
+    self.details_bridge_sprites.draw(self.display_surface)
+    self.details_bridge_sprites.update(self.world_shift_x,self.world_shift_y)
+
     #vegetation1
     self.vegetation1_sprites.draw(self.display_surface)
     self.vegetation1_sprites.update(self.world_shift_x,self.world_shift_y)
@@ -205,18 +220,6 @@ class Level:
     #vegetation4
     self.vegetation4_sprites.draw(self.display_surface)
     self.vegetation4_sprites.update(self.world_shift_x,self.world_shift_y)
-
-    #buildings
-    self.buildings_sprites.draw(self.display_surface)
-    self.buildings_sprites.update(self.world_shift_x,self.world_shift_y)
-
-    #bridge
-    self.bridge_sprites.draw(self.display_surface)
-    self.bridge_sprites.update(self.world_shift_x,self.world_shift_y)
-
-    #detail_bridge
-    self.details_bridge_sprites.draw(self.display_surface)
-    self.details_bridge_sprites.update(self.world_shift_x,self.world_shift_y)
 
     #player
     self.player.update()
