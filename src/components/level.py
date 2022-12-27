@@ -2,6 +2,7 @@ import pygame
 from settings import tile_size, screen_width, screen_height
 from components.tiles import Tile
 from components.player import Player
+from components.building import Building
 
 class Level:
   def __init__(self,level_data,surface):
@@ -13,6 +14,8 @@ class Level:
   def setup_level(self,layout):
     self.tiles = pygame.sprite.Group()
     self.player = pygame.sprite.GroupSingle()
+    self.buildings = pygame.sprite.Group()
+
     for row_index,row in enumerate(layout):
       for col_index,cell in enumerate(row):
         x = col_index * tile_size
@@ -23,6 +26,16 @@ class Level:
         if cell == 'P':
           player_sprite = Player((x,y))
           self.player.add(player_sprite)
+        if self.is_number(cell):
+          building_sprite = Building((x,y), float(cell))
+          self.buildings.add(building_sprite)
+
+  def is_number(self,s):
+    try:
+      float(s)
+      return True
+    except ValueError:
+      return False
 
   def scroll_world(self):
     player = self.player.sprite
@@ -77,6 +90,9 @@ class Level:
     self.tiles.update(self.world_shift_x,self.world_shift_y)
     self.tiles.draw(self.display_surface)
     self.scroll_world()
+    #buildings
+    self.buildings.update(self.world_shift_x,self.world_shift_y)
+    self.buildings.draw(self.display_surface)
     #player
     self.player.update()
     self.player.draw(self.display_surface)
